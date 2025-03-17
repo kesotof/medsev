@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    img {
+      max-width: 100px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Inventario de Productos</h1>
+
+  <button id="mostrarFiltro">Mostrar IDs del 1 al 3 y del 7 al 10</button>
+  <button id="reiniciar">Reiniciar Inventario</button>
+
+  <table id="tablaInventario">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Tipo</th>
+        <th>Marca</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí se generará dinámicamente el inventario -->
+    </tbody>
+  </table>
+
+  <script src="../js/productos.js"></script>
+  <script>
+    // Mostrar el inventario en la tabla
+    function mostrarInventario(productos) {
+      const tbody = document.querySelector("#tablaInventario tbody");
+      tbody.innerHTML = ""; // Limpiar el contenido anterior
+
+      productos.forEach(producto => {
+        const fila = document.createElement("tr");
+
+        // Crear celda para el ID
+        const celdaId = document.createElement("td");
+        celdaId.textContent = producto.id;
+        fila.appendChild(celdaId);
+
+        // Crear celda para la imagen
+        const celdaImagen = document.createElement("td");
+        const imagen = document.createElement("img");
+        imagen.src = producto.imagen;
+        imagen.alt = producto.nombre;
+        celdaImagen.appendChild(imagen);
+        fila.appendChild(celdaImagen);
+
+        // Crear celdas para las demás propiedades
+        Object.values({
+          nombre: producto.nombre,
+          descripcion: producto.descripcion,
+          precio: `$${producto.precio}`,
+          cantidad: producto.cantidad,
+          tipo: producto.tipo,
+          marca: producto.marca
+        }).forEach(valor => {
+          const celda = document.createElement("td");
+          celda.textContent = valor;
+          fila.appendChild(celda);
+        });
+
+        tbody.appendChild(fila);
+      });
+    }
+
+    // Mostrar todos los productos al cargar la página
+    mostrarInventario(obtenerInventario());
+
+    // Filtrar productos al hacer clic en el botón
+    document.getElementById("mostrarFiltro").addEventListener("click", () => {
+      const rangos = [[1, 3], [7, 10]]; // Rangos de IDs a mostrar
+      const productosFiltrados = filtrarPorIds(rangos);
+      mostrarInventario(productosFiltrados);
+    });
+
+    // Reiniciar inventario al hacer clic en el botón
+    document.getElementById("reiniciar").addEventListener("click", () => {
+      if (confirm("¿Estás seguro de que deseas reiniciar el inventario?")) {
+        reiniciarInventario();
+      }
+    });
+  </script>
+</body>
+</html>
