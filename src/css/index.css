@@ -1,0 +1,87 @@
+.carousel-container {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: visible;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .carousel-slides {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  
+  .carousel-slide {
+    min-width: 100%;
+    flex: 1 0 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: none;
+    height: 0;
+    padding-bottom: 33.33%;
+    position: relative;
+  }
+  
+  .carousel-slide.active {
+    opacity: 1;
+    display: block;
+  }
+  
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+  }
+  
+  .medserver-carousel-controls {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    padding: 15px 0;
+  }
+  
+  .medserver-carousel-arrow {
+    background-color: transparent !important;
+    border: none !important;
+    color: #8c99ac !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+    padding: 0 5px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20px !important;
+  }
+  
+  .medserver-carousel-arrow:hover {
+    color: #223c6f !important;
+  }
+  
+  .medserver-carousel-indicators {
+    display: flex;
+    gap: 12px;
+    margin: 0 15px;
+  }
+  
+  .medserver-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    border: none;
+  }
+  
+  .medserver-indicator.active {
+    background-color: #223c6f;
+    width: 8px;
+    height: 8px;
+  }

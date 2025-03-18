@@ -59,7 +59,6 @@ let inventario = [
     location.reload();
   }
 
-  // Cargar inventario desde localStorage al iniciar (si existe)
   const inventarioGuardado = JSON.parse(localStorage.getItem("inventario"));
   if (inventarioGuardado) {
     inventario = inventarioGuardado;
