@@ -260,10 +260,26 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
     }
   
     const crearHeaderHTML = (logoSrc) => {
+      const baseUrl = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+      
+      let indexPath;
+      if (baseUrl.endsWith('src')) {
+        indexPath = 'index.html';
+      } else {
+        indexPath = '../index.html';
+      }
+      
+      let sucursalesPath;
+      if (baseUrl.endsWith('src')) {
+        sucursalesPath = 'pages/sucursales.html';
+      } else {
+        sucursalesPath = '../pages/sucursales.html';
+      }
+
       return `
         <nav class="navbar navbar-expand-lg top-navbar">
           <div class="container-fluid">
-            <a class="navbar-brand" href="pages/pruba.html">
+            <a class="navbar-brand" href="${indexPath}">
               <img src="${logoSrc}" alt="logo" width="150" height="70" class="d-inline-block align-text-top" id="medserver-logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -282,7 +298,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
                   </div>
                   <ul id="lista-sucursales" class="lista-sucursales ps-0" onmouseover="mantenerVisible()" onmouseout="ocultarSucursales()">
                     <li class="sucursal-item">
-                      <a href="pages/sucursales.html" class="sucursal-link">
+                      <a href="${sucursalesPath}" class="sucursal-link">
                         <i class="fas fa-map-marker-alt"></i>
                         <div class="info-sucursal">
                           <div class="nombre-sucursal-hover">Viña</div>
@@ -291,7 +307,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
                       </a>
                     </li>
                     <li class="sucursal-item">
-                      <a href="pages/sucursales.html" class="sucursal-link">
+                      <a href="${sucursalesPath}" class="sucursal-link">
                         <i class="fas fa-map-marker-alt"></i>
                         <div class="info-sucursal">
                           <div class="nombre-sucursal-hover">+ 18 Sucursales mas</div>
@@ -315,10 +331,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               <li class="catalogo-item">
                 Equipamiento Médico
                 <div class="submenu">
-                  <a href="pages/diagnostico.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-stethoscope"></i> Diagnóstico
                   </a>
-                  <a href="pages/emergencias.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-ambulance"></i> Emergencias
                   </a>
                 </div>
@@ -326,10 +342,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               <li class="catalogo-item ${activeSection === 'insumos' ? 'active' : ''}">
                 Insumos Médicos
                 <div class="submenu">
-                  <a href="pages/descartables.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-hand-sparkles"></i> Insumos Descartables
                   </a>
-                  <a href="pages/soluciones.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-tint"></i> Líquidos y Soluciones
                   </a>
                 </div>
@@ -337,10 +353,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               <li class="catalogo-item ${activeSection === 'especializados' ? 'active' : ''}">
                 Productos Especializados
                 <div class="submenu">
-                  <a href="pages/laboratorio.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-flask"></i> Laboratorio Clínico
                   </a>
-                  <a href="pages/odontologia.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-tooth"></i> Odontología
                   </a>
                 </div>
@@ -348,10 +364,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               <li class="catalogo-item ${activeSection === 'repuestos' ? 'active' : ''}">
                 Repuestos y Accesorios
                 <div class="submenu">
-                  <a href="pages/repuestos.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-tools"></i> Repuestos para Equipos
                   </a>
-                  <a href="pages/accesorios.html" class="submenu-item">
+                  <a href="#" class="submenu-item">
                     <i class="fas fa-cogs"></i> Accesorios para Equipamiento
                   </a>
                 </div>
