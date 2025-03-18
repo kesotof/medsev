@@ -143,10 +143,18 @@
                 <button class="producto-boton">Añadir al Carrito</button>
             </div>
         </div>
+        </div>
+    </div>
+    <div id="footer-container"></div>
 
   <script src="js/index.js"></script>
+  <script src="js/footer.js"></script>
     <script>
       inicializarHeader('header-container', 'equipamiento');
+    </script>
+    <script>
+        const footer = new Footer();
+        footer.render('#footer-container');
     </script>
 </body>
 </html>
