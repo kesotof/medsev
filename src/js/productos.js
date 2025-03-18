@@ -30,20 +30,10 @@ let inventario = [
   function guardarInventario() {
     localStorage.setItem("inventario", JSON.stringify(inventario));
   }
-  
-  /**
-   * Obtiene el inventario actual.
-   * @returns {Array}
-   */
   function obtenerInventario() {
     return inventario;
   }
   
-  /**
-   * Filtra el inventario por rangos de IDs.
-   * @param {Array} rangos
-   * @returns {Array}
-   */
   function filtrarPorIds(rangos) {
     const idsFiltrados = [];
     rangos.forEach(([inicio, fin]) => {
