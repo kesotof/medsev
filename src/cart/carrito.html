@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - MedServer</title>
+    <link rel="stylesheet" href="cart.css">
+    <script src="../js/header.js"></script>
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <div class="container">
+        <div class="cart-container">
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+            </div>
+            
+            <div id="cart-container">
+                <!-- El contenido del carrito se cargará mediante JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+    
+    <script src="../js/productos.js"></script>
+    <script src="cart.js"></script>
+    <script src="../js/footer.js"></script>
+    <script>
+        // Inicializar componentes
+        inicializarHeader('header-container', '');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const footer = new Footer();
+            footer.render('#footer-container');
+            
+            // Inicializar el carrito y mostrar su contenido
+            const cart = new ShoppingCart();
+            cart.updateCartUI();
+        });
+    </script>
+</body>
+</html>
