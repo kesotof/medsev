@@ -69,7 +69,6 @@ class ShoppingCart {
     clearCart() {
         this.cart = [];
         this.saveCart();
-        this.showNotification('El carrito ha sido vaciado');
         this.updateCartUI();
     }
 
