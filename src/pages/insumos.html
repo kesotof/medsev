@@ -6,6 +6,8 @@
     <title>Catálogo de Insumos Médico</title>
     <link rel="stylesheet" href="../css/insumo.css">
     <script src="../js/header.js"></script>
+    <script src="../cart/cart.js"></script>
+    <link rel="icon" href="../image/icono.png" type="image/x-icon">
 </head>
 <body>
     <div id="header-container"></div>
@@ -37,11 +39,11 @@
                     </div>
                     <div class="filter-section">
                         <div class="filter-title">
-                            <span>TIPO DE EQUIPAMIENTO</span>
+                            <span>Tipos de Insumos Médicos</span>
                             <span class="icon">−</span>
                         </div>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="tipo" value="Insumos Descartables"> Insumos Descartables <span class="count-badge">3</span></label>
+                            <label><input type="checkbox" name="tipo" value="Insumos Descartables"> Insumos Descartables <span class="count-badge">5</span></label>
                             <label><input type="checkbox" name="tipo" value="Líquidos y Soluciones"> Líquidos y Soluciones <span class="count-badge">3</span></label>
                         </div>
                     </div>
@@ -55,7 +57,7 @@
                             <label><input type="checkbox" name="marca" value="3M"> 3M <span class="count-badge">1</span></label>
                             <label><input type="checkbox" name="marca" value="Clancarrier"> Clancarrier <span class="count-badge">1</span></label>
                             <label><input type="checkbox" name="marca" value="Kabi"> Kabi <span class="count-badge">1</span></label>
-                            <label><input type="checkbox" name="marca" value="Ditago"> Ditago <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Ditago-chek"> Ditago <span class="count-badge">1</span></label>
                             <label><input type="checkbox" name="marca" value="AUTOSTYLE"> AUTOSTYLE <span class="count-badge">1</span></label>
                         </div>
                     </div>
@@ -91,91 +93,117 @@
     <script src="../js/productos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    function formatearPrecio(precio) {
-        return precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
+            const cart = new ShoppingCart();
+            
+            function formatearPrecio(precio) {
+                return precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
 
-    function renderizarProductos(productos) {
-        const contenedor = document.getElementById('products-container');
-        contenedor.innerHTML = '';
-        productos.forEach(producto => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-image">
-                    <img src="${producto.imagen}" alt="${producto.nombre}">
-                </div>
-                <div class="product-info">
-                    <div class="product-brand">${producto.marca}</div>
-                    <div class="product-name">${producto.nombre}</div>
-                    <div class="product-price">$${formatearPrecio(producto.precio)}</div>
-                    <div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>
-                    <button class="add-to-cart">Añadir al Carrito</button>
-                </div>
-            `;
-            contenedor.appendChild(card);
-        });
-        document.getElementById('product-count').textContent = `${productos.length} Productos`;
-    }
+            function renderizarProductos(productos) {
+                const contenedor = document.getElementById('products-container');
+                contenedor.innerHTML = '';
+                productos.forEach(producto => {
+                    const estaAgotado = producto.cantidad <= 0;
+                    const stockText = estaAgotado ? 
+                        '<div class="stock-info stock-agotado">Agotado</div>' : 
+                        `<div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>`;
+                    
+                    const botonClass = estaAgotado ? 
+                        'add-to-cart producto-boton-agotado' : 
+                        'add-to-cart';
+                        
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.dataset.id = producto.id;
+                    card.innerHTML = `
+                        <div class="product-image">
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand">${producto.marca}</div>
+                            <div class="product-name">${producto.nombre}</div>
+                            <div class="product-price">$${formatearPrecio(producto.precio)}</div>
+                            ${stockText}
+                            <button class="${botonClass}" ${estaAgotado ? 'disabled' : ''}>
+                                ${estaAgotado ? 'Agotado' : 'Añadir al Carrito'}
+                            </button>
+                        </div>
+                    `;
+                    contenedor.appendChild(card);
+                });
+                document.getElementById('product-count').textContent = `${productos.length} Productos`;
 
-    function ordenarProductos(productos, criterio) {
-        const productosCopia = [...productos];
-        switch (criterio) {
-            case 'price-asc':
-                return productosCopia.sort((a, b) => a.precio - b.precio);
-            case 'price-desc':
-                return productosCopia.sort((b, a) => a.precio - b.precio);
-            case 'name':
-                return productosCopia.sort((a, b) => a.nombre.localeCompare(b.nombre));
-            default:
-                return productosCopia;
-        }
-    }
+                const addToCartButtons = document.querySelectorAll('.add-to-cart:not(.producto-boton-agotado)');
+                addToCartButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const card = this.closest('.product-card');
+                        const productId = parseInt(card.dataset.id);
+                        const producto = inventario.find(item => item.id === productId);
+                        if (producto) {
+                            cart.addToCart(producto);
+                        }
+                    });
+                });
+            }
 
-    function aplicarFiltros(productos) {
-        const tipoFiltros = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(checkbox => checkbox.value);
-        const marcaFiltros = Array.from(document.querySelectorAll('input[name="marca"]:checked')).map(checkbox => checkbox.value);
+            function ordenarProductos(productos, criterio) {
+                const productosCopia = [...productos];
+                switch (criterio) {
+                    case 'price-asc':
+                        return productosCopia.sort((a, b) => a.precio - b.precio);
+                    case 'price-desc':
+                        return productosCopia.sort((b, a) => a.precio - b.precio);
+                    case 'name':
+                        return productosCopia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    default:
+                        return productosCopia;
+                }
+            }
 
-        return productos.filter(producto => {
-            const pasaTipo = tipoFiltros.length === 0 || tipoFiltros.includes(producto.tipo);
-            const pasaMarca = marcaFiltros.length === 0 || marcaFiltros.includes(producto.marca);
-            return pasaTipo && pasaMarca;
-        });
-    }
+            function aplicarFiltros(productos) {
+                const tipoFiltros = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(checkbox => checkbox.value);
+                const marcaFiltros = Array.from(document.querySelectorAll('input[name="marca"]:checked')).map(checkbox => checkbox.value);
 
-    function filtrarPorPrecio(productos) {
-        const precioMinInput = document.querySelector('.price-inputs input[placeholder="De"]').value;
-        const precioMaxInput = document.querySelector('.price-inputs input[placeholder="A"]').value;
+                return productos.filter(producto => {
+                    const pasaTipo = tipoFiltros.length === 0 || tipoFiltros.includes(producto.tipo);
+                    const pasaMarca = marcaFiltros.length === 0 || marcaFiltros.includes(producto.marca);
+                    return pasaTipo && pasaMarca;
+                });
+            }
 
-        const precioMin = precioMinInput ? parseInt(precioMinInput.replace(/\./g, ''), 10) : 0;
-        const precioMax = precioMaxInput ? parseInt(precioMaxInput.replace(/\./g, ''), 10) : Infinity;
+            function filtrarPorPrecio(productos) {
+                const precioMinInput = document.querySelector('.price-inputs input[placeholder="De"]').value;
+                const precioMaxInput = document.querySelector('.price-inputs input[placeholder="A"]').value;
 
-        return productos.filter(producto => producto.precio >= precioMin && producto.precio <= precioMax);
-    }
+                const precioMin = precioMinInput ? parseInt(precioMinInput.replace(/\./g, ''), 10) : 0;
+                const precioMax = precioMaxInput ? parseInt(precioMaxInput.replace(/\./g, ''), 10) : Infinity;
 
-    let productosFiltrados = filtrarPorIds([[9, 14]]);
+                return productos.filter(producto => producto.precio >= precioMin && producto.precio <= precioMax);
+            }
 
-    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+            let productosFiltrados = filtrarPorIds([[9, 14]]);
 
-    document.getElementById('sort-select').addEventListener('change', function () {
-        const criterio = this.value;
-        const productosOrdenados = ordenarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)), criterio);
-        renderizarProductos(productosOrdenados);
-    });
-
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
             renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
-        });
-    });
 
-    document.querySelectorAll('.price-inputs input').forEach(input => {
-        input.addEventListener('input', function () {
-            renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+            document.getElementById('sort-select').addEventListener('change', function () {
+                const criterio = this.value;
+                const productosOrdenados = ordenarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)), criterio);
+                renderizarProductos(productosOrdenados);
+            });
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+                });
+            });
+
+            document.querySelectorAll('.price-inputs input').forEach(input => {
+                input.addEventListener('input', function () {
+                    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+                });
+            });
         });
-    });
-});
     </script>
 </body>
 </html>
