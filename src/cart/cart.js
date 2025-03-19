@@ -18,13 +18,18 @@ class ShoppingCart {
 
     // Añadir producto al carrito
     addToCart(product) {
+        // Asegurar que el producto tiene ID
+        if (!product.id) {
+            product.id = Math.floor(Math.random() * 100000);
+        }
+    
         const existingProductIndex = this.cart.findIndex(item => item.id === product.id);
         
         if (existingProductIndex > -1) {
             // Si el producto ya está en el carrito, incrementar la cantidad
             if (this.cart[existingProductIndex].cantidadEnCarrito < product.cantidad) {
                 this.cart[existingProductIndex].cantidadEnCarrito += 1;
-                this.showNotification('Producto actualizado en el carrito');
+                this.showNotification(`${product.nombre || 'Producto'} actualizado en el carrito`);
             } else {
                 this.showNotification('No hay más stock disponible de este producto', 'error');
                 return false;
@@ -33,10 +38,11 @@ class ShoppingCart {
             // Si el producto no está en el carrito, añadirlo con cantidad 1
             const cartProduct = { ...product, cantidadEnCarrito: 1 };
             this.cart.push(cartProduct);
-            this.showNotification('Producto añadido al carrito');
+            this.showNotification(`${product.nombre || 'Producto'} añadido al carrito`);
         }
         
         this.saveCart();
+        
         return true;
     }
 
@@ -94,7 +100,12 @@ class ShoppingCart {
             if (!counter) {
                 counter = document.createElement('span');
                 counter.className = 'cart-counter';
-                cartIcon.parentElement.appendChild(counter);
+                const parentLi = cartIcon.closest('.nav-item');
+                if (parentLi) {
+                    parentLi.appendChild(counter);
+                } else {
+                    cartIcon.parentElement.appendChild(counter);
+                }
             }
             
             counter.textContent = itemCount;
@@ -129,6 +140,145 @@ class ShoppingCart {
         setTimeout(() => {
             notification.remove();
         }, 3000);
+    }
+    
+    // Abrir/cerrar el modal del carrito
+    toggleCartModal() {
+        const cartModal = document.getElementById('cart-modal');
+        const overlay = document.querySelector('.cart-modal-overlay');
+        
+        if (!cartModal) {
+            console.error('Error: Modal del carrito no encontrado');
+            return;
+        }
+        
+        // Usar getComputedStyle para obtener el valor real
+        const currentDisplay = window.getComputedStyle(cartModal).display;
+        
+        if (currentDisplay === 'none') {
+            console.log('Abriendo modal del carrito');
+            this.updateCartModalContent();
+            cartModal.style.cssText = 'display: block !important;';
+            if (overlay) overlay.style.cssText = 'display: block !important;';
+        } else {
+            console.log('Cerrando modal del carrito');
+            cartModal.style.cssText = 'display: none !important;';
+            if (overlay) overlay.style.cssText = 'display: none !important;';
+        }
+    }
+
+    // Actualizar el contenido del modal del carrito
+    updateCartModalContent() {
+        const modalBody = document.querySelector('.cart-modal-body');
+        const totalElement = document.getElementById('cart-modal-total-price');
+        
+        if (!modalBody || !totalElement) return;
+        
+        if (this.cart.length === 0) {
+            modalBody.innerHTML = `<div class="cart-modal-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Tu carrito está vacío</p>
+            </div>`;
+            totalElement.textContent = '$0';
+            return;
+        }
+        
+        const formatPrice = (price) => {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        };
+        
+        let cartItems = '';
+        this.cart.forEach(item => {
+            cartItems += `
+                <div class="cart-modal-item" data-id="${item.id}">
+                    <img src="${item.imagen || '#'}" alt="${item.nombre || 'Producto'}" class="cart-modal-item-image">
+                    <div class="cart-modal-item-details">
+                        <div class="cart-modal-item-name">${item.nombre || 'Producto'}</div>
+                        <div class="cart-modal-item-price">$${formatPrice(item.precio)}</div>
+                    </div>
+                    <div class="cart-modal-item-actions">
+                        <div class="cart-modal-item-quantity">
+                            <button class="cart-modal-quantity-btn minus">-</button>
+                            <input type="number" value="${item.cantidadEnCarrito}" min="1" max="${item.cantidad}" class="cart-modal-quantity-input">
+                            <button class="cart-modal-quantity-btn plus">+</button>
+                        </div>
+                        <button class="cart-modal-item-remove">×</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        modalBody.innerHTML = cartItems;
+        totalElement.textContent = `$${formatPrice(this.calculateTotal())}`;
+        
+        // Adjuntar eventos a los elementos del modal
+        this.attachCartModalEvents();
+    }
+
+    // Adjuntar eventos a los elementos del modal del carrito
+    attachCartModalEvents() {
+        // Botones de disminuir cantidad
+        const minusButtons = document.querySelectorAll('.cart-modal-quantity-btn.minus');
+        minusButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const item = e.target.closest('.cart-modal-item');
+                const productId = parseInt(item.dataset.id);
+                const input = item.querySelector('.cart-modal-quantity-input');
+                
+                if (input.value > 1) {
+                    input.value = parseInt(input.value) - 1;
+                    this.updateQuantity(productId, parseInt(input.value));
+                    this.updateCartModalContent();
+                }
+            });
+        });
+        
+        // Botones de aumentar cantidad
+        const plusButtons = document.querySelectorAll('.cart-modal-quantity-btn.plus');
+        plusButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const item = e.target.closest('.cart-modal-item');
+                const productId = parseInt(item.dataset.id);
+                const input = item.querySelector('.cart-modal-quantity-input');
+                
+                input.value = parseInt(input.value) + 1;
+                if (this.updateQuantity(productId, parseInt(input.value))) {
+                    this.updateCartModalContent();
+                } else {
+                    input.value = parseInt(input.value) - 1;
+                }
+            });
+        });
+        
+        // Inputs de cantidad
+        const quantityInputs = document.querySelectorAll('.cart-modal-quantity-input');
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const item = e.target.closest('.cart-modal-item');
+                const productId = parseInt(item.dataset.id);
+                const newValue = parseInt(e.target.value);
+                
+                if (this.updateQuantity(productId, newValue)) {
+                    this.updateCartModalContent();
+                } else {
+                    const product = this.cart.find(p => p.id === productId);
+                    if (product) {
+                        e.target.value = product.cantidadEnCarrito;
+                    }
+                }
+            });
+        });
+        
+        // Botones de eliminar producto
+        const removeButtons = document.querySelectorAll('.cart-modal-item-remove');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const item = e.target.closest('.cart-modal-item');
+                const productId = parseInt(item.dataset.id);
+                this.removeFromCart(productId);
+                this.updateCartModalContent();
+            });
+        });
     }
     
     // Generar HTML para el modal del carrito
@@ -166,10 +316,10 @@ class ShoppingCart {
             cartHTML += `
                 <tr data-id="${item.id}">
                     <td class="product-info">
-                        <img src="${item.imagen}" alt="${item.nombre}">
+                        <img src="${item.imagen || '#'}" alt="${item.nombre || 'Producto'}">
                         <div>
-                            <h4>${item.nombre}</h4>
-                            <p>${item.marca}</p>
+                            <h4>${item.nombre || 'Producto'}</h4>
+                            <p>${item.marca || ''}</p>
                         </div>
                     </td>
                     <td class="product-price">$${formatPrice(item.precio)}</td>
