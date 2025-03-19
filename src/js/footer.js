@@ -71,6 +71,7 @@ class Footer {
                     font-family: Arial, sans-serif;
                     width: 100%;
                     background-color: #f5f5f5;
+                    margin-top: 30px;
                 }
 
                 /* Estilos sección newsletter */
