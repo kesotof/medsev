@@ -3,21 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito de Compras - MedServer</title>
+    <title>Carrito de Compras - MedSev</title>
     <link rel="stylesheet" href="cart.css">
     <script src="../js/header.js"></script>
 </head>
 <body>
-    <div id="header-container"></div>
-
-    <div class="container">
-        <div class="cart-container">
-            <div class="cart-header">
-                <h2>Carrito de Compras</h2>
+    <header class="header">
+        <div class="logo">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 5C13.373 5 8 10.373 8 17C8 23.627 13.373 29 20 29C26.627 29 32 23.627 32 17" stroke="#FFC233" stroke-width="4"/>
+                <path d="M20 5C26.627 5 32 10.373 32 17C32 23.627 26.627 29 20 29C13.373 29 8 23.627 8 17" stroke="#FF5E5B" stroke-width="4"/>
+                <path d="M20 5C16.686 5 14 7.686 14 11C14 14.314 16.686 17 20 17C23.314 17 26 14.314 26 11" stroke="#36D6E7" stroke-width="4"/>
+            </svg>
+            <span class="logo-text">Medsev</span>
+        </div>
+        
+        <div class="progress-container">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div class="step-text">Carro</div>
             </div>
             
-            <div id="cart-container">
+            <div class="line active-left"></div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">Pago</div>
             </div>
+            
+            <div class="line"></div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">Obtén tu producto</div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div id="cart-container">
+            <!-- Cart content will be loaded here by JS -->
         </div>
     </div>
 

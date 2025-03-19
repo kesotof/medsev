@@ -57,7 +57,6 @@ class ShoppingCart {
             if (quantity > 0 && quantity <= maxStock) {
                 this.cart[productIndex].cantidadEnCarrito = quantity;
                 this.saveCart();
-                this.updateCartUI();
                 return true;
             } else if (quantity > maxStock) {
                 this.showNotification(`Solo hay ${maxStock} unidades disponibles`, 'error');
@@ -268,64 +267,56 @@ class ShoppingCart {
         const formatPrice = (price) => {
             return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         };
+        
+        const totalItems = this.cart.reduce((total, item) => total + item.cantidadEnCarrito, 0);
+        const totalPrice = this.calculateTotal();
 
         let cartHTML = `
-            <div class="cart-items">
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Subtotal</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <div class="cart-flex-container">
+                <div class="cart-section">
+                    <h2 class="cart-title">Mi carrito</h2>
         `;
 
         this.cart.forEach(item => {
             cartHTML += `
-                <tr data-id="${item.id}">
-                    <td class="product-info">
-                        <img src="${item.imagen || '#'}" alt="${item.nombre || 'Producto'}">
-                        <div>
-                            <h4>${item.nombre || 'Producto'}</h4>
-                            <p>${item.marca || ''}</p>
+                <div class="cart-item" data-id="${item.id}">
+                    <div class="product-image">
+                        <img src="${item.imagen || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50%" x="50%" dy=".35em" text-anchor="middle" font-size="14" fill="%23333">Producto</text></svg>'}" alt="${item.nombre || 'Producto'}">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-brand">${item.marca || 'Marca'}</div>
+                        <div class="product-name">${item.nombre || 'Producto'}</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus">−</button>
+                            <input type="number" value="${item.cantidadEnCarrito}" min="1" max="${item.cantidad}" class="quantity-input">
+                            <button class="quantity-btn plus">+</button>
                         </div>
-                    </td>
-                    <td class="product-price">$${formatPrice(item.precio)}</td>
-                    <td class="product-quantity">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="number" value="${item.cantidadEnCarrito}" min="1" max="${item.cantidad}" class="quantity-input">
-                        <button class="quantity-btn plus">+</button>
-                    </td>
-                    <td class="product-subtotal">$${formatPrice(item.precio * item.cantidadEnCarrito)}</td>
-                    <td class="product-remove">
-                        <button class="remove-btn"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
+                    </div>
+                    <div class="price">${formatPrice(item.precio * item.cantidadEnCarrito)} CLP</div>
+                    <button class="remove-btn"><i class="fas fa-trash"></i></button>
+                </div>
             `;
         });
 
         cartHTML += `
-                    </tbody>
-                </table>
-            </div>
-            <div class="cart-summary">
-                <div class="summary-row total">
-                    <span>Total:</span>
-                    <span>$${formatPrice(this.calculateTotal())}</span>
-                </div>
-                <div class="cart-actions">
-                    <button class="clear-cart">Vaciar Carrito</button>
-                    <button class="checkout">Proceder al Pago</button>
-                </div>
-                <a href="../index.html" class="continue-shopping">Continuar comprando</a>
-            </div>
-        `;
+                        </div>
+                        <div class="summary-section">
+                            <h2 class="summary-title">Resumen</h2>
+                            <div class="product-count">${totalItems} producto${totalItems !== 1 ? 's' : ''}</div>
+                            <div class="total-section">
+                                <span>Total:</span>
+                                <span>${formatPrice(totalPrice)} CLP</span>
+                            </div>
+                            <button class="checkout">Continuar con la compra</button>
+                            <div class="cart-actions">
+                                <button class="clear-cart">Vaciar carrito</button>
+                            </div>
+                            <a href="../index.html" class="continue-shopping">Continuar comprando</a>
+                        </div>
+                    </div>
+                `;
 
-        return cartHTML;
+                return cartHTML;
     }
 
     updateCartUI() {
@@ -337,11 +328,15 @@ class ShoppingCart {
     }
 
     attachCartEvents() {
+        // Corregido: cambiamos de 'tr' a '.cart-item'
         const removeButtons = document.querySelectorAll('.remove-btn');
         removeButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                const productId = parseInt(e.target.closest('tr').dataset.id);
-                this.removeFromCart(productId);
+                const item = e.target.closest('.cart-item');
+                if (item) {
+                    const productId = parseInt(item.dataset.id);
+                    this.removeFromCart(productId);
+                }
             });
         });
 
@@ -351,31 +346,54 @@ class ShoppingCart {
 
         minusButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                const row = e.target.closest('tr');
-                const productId = parseInt(row.dataset.id);
-                const input = row.querySelector('.quantity-input');
-                if (input.value > 1) {
-                    input.value = parseInt(input.value) - 1;
-                    this.updateQuantity(productId, parseInt(input.value));
+                // Corregido: cambiamos de 'tr' a '.cart-item'
+                const item = e.target.closest('.cart-item');
+                if (item) {
+                    const productId = parseInt(item.dataset.id);
+                    const input = item.querySelector('.quantity-input');
+                    if (input && input.value > 1) {
+                        input.value = parseInt(input.value) - 1;
+                        if (this.updateQuantity(productId, parseInt(input.value))) {
+                            this.updateCartUI(); // Actualizamos la UI después del cambio
+                        }
+                    }
                 }
             });
         });
 
         plusButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                const row = e.target.closest('tr');
-                const productId = parseInt(row.dataset.id);
-                const input = row.querySelector('.quantity-input');
-                input.value = parseInt(input.value) + 1;
-                this.updateQuantity(productId, parseInt(input.value));
+                // Corregido: cambiamos de 'tr' a '.cart-item'
+                const item = e.target.closest('.cart-item');
+                if (item) {
+                    const productId = parseInt(item.dataset.id);
+                    const input = item.querySelector('.quantity-input');
+                    if (input) {
+                        const newValue = parseInt(input.value) + 1;
+                        if (this.updateQuantity(productId, newValue)) {
+                            this.updateCartUI(); // Actualizamos la UI después del cambio
+                        }
+                    }
+                }
             });
         });
 
         quantityInputs.forEach(input => {
             input.addEventListener('change', (e) => {
-                const row = e.target.closest('tr');
-                const productId = parseInt(row.dataset.id);
-                this.updateQuantity(productId, parseInt(e.target.value));
+                // Corregido: cambiamos de 'tr' a '.cart-item'
+                const item = e.target.closest('.cart-item');
+                if (item) {
+                    const productId = parseInt(item.dataset.id);
+                    if (this.updateQuantity(productId, parseInt(e.target.value))) {
+                        this.updateCartUI(); // Actualizamos la UI después del cambio
+                    } else {
+                        // Si falla (ej: fuera de stock), restauramos el valor anterior
+                        const product = this.cart.find(p => p.id === productId);
+                        if (product) {
+                            e.target.value = product.cantidadEnCarrito;
+                        }
+                    }
+                }
             });
         });
 
@@ -391,10 +409,28 @@ class ShoppingCart {
         const checkoutButton = document.querySelector('.checkout');
         if (checkoutButton) {
             checkoutButton.addEventListener('click', () => {
-                alert('¡Gracias por tu compra! Esta funcionalidad estará disponible próximamente.');
+                window.location.href = './checkout.html';
             });
         }
     }
 }
 
 window.ShoppingCart = ShoppingCart;
+
+// Inicialización del carrito cuando se carga la página
+document.addEventListener('DOMContentLoaded', () => {
+    const cart = new ShoppingCart();
+    
+    // Si estamos en la página del carrito, actualizar la UI
+    if (document.getElementById('cart-container')) {
+        cart.updateCartUI();
+    }
+    
+    // Añadir listener para el icono del carrito
+    const cartIcon = document.querySelector('.cart-icon');
+    if (cartIcon) {
+        cartIcon.addEventListener('click', () => {
+            cart.toggleCartModal();
+        });
+    }
+});
