@@ -230,6 +230,22 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
       .catalogo-item.active {
         background-color: #0056b3;
       }
+      .cart-counter {
+        position: absolute;
+        top: -8px;
+        right: -3px;
+        background-color: #ff5722;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        text-indent: 3px;
+      }
     `;
   
     document.head.appendChild(headerStyles);
@@ -316,11 +332,11 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
                     </li>
                   </ul>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item" style="position: relative;">
+                <a class="nav-link" href="../cart/index.html" role="button">
                     <i class="fas fa-shopping-cart cart-icon"></i>
-                  </a>
-                </li>
+                </a>
+            </li>
               </ul>
             </div>
           </div>

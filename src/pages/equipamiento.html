@@ -6,6 +6,8 @@
     <title>Catálogo de Equipamiento Médico</title>
     <link rel="stylesheet" href="../css/equipamiento.css">
     <script src="../js/header.js"></script>
+    <!-- Incluir el script del carrito -->
+    <script src="../cart/cart.js"></script>
 </head>
 <body>
     <div id="header-container"></div>
@@ -91,91 +93,108 @@
     <script src="../js/productos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    function formatearPrecio(precio) {
-        return precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
+            // Inicializar el carrito
+            const cart = new ShoppingCart();
+            
+            function formatearPrecio(precio) {
+                return precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
 
-    function renderizarProductos(productos) {
-        const contenedor = document.getElementById('products-container');
-        contenedor.innerHTML = '';
-        productos.forEach(producto => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-image">
-                    <img src="${producto.imagen}" alt="${producto.nombre}">
-                </div>
-                <div class="product-info">
-                    <div class="product-brand">${producto.marca}</div>
-                    <div class="product-name">${producto.nombre}</div>
-                    <div class="product-price">$${formatearPrecio(producto.precio)}</div>
-                    <div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>
-                    <button class="add-to-cart">Añadir al Carrito</button>
-                </div>
-            `;
-            contenedor.appendChild(card);
-        });
-        document.getElementById('product-count').textContent = `${productos.length} Productos`;
-    }
+            function renderizarProductos(productos) {
+                const contenedor = document.getElementById('products-container');
+                contenedor.innerHTML = '';
+                productos.forEach(producto => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.dataset.id = producto.id; // Añadir el ID como atributo data-id
+                    card.innerHTML = `
+                        <div class="product-image">
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand">${producto.marca}</div>
+                            <div class="product-name">${producto.nombre}</div>
+                            <div class="product-price">$${formatearPrecio(producto.precio)}</div>
+                            <div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>
+                            <button class="add-to-cart">Añadir al Carrito</button>
+                        </div>
+                    `;
+                    contenedor.appendChild(card);
+                });
+                document.getElementById('product-count').textContent = `${productos.length} Productos`;
+                
+                // Añadir eventos a los botones de "Añadir al Carrito"
+                const addToCartButtons = document.querySelectorAll('.add-to-cart');
+                addToCartButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const card = this.closest('.product-card');
+                        const productId = parseInt(card.dataset.id);
+                        const producto = inventario.find(item => item.id === productId);
+                        if (producto) {
+                            cart.addToCart(producto);
+                        }
+                    });
+                });
+            }
 
-    function ordenarProductos(productos, criterio) {
-        const productosCopia = [...productos];
-        switch (criterio) {
-            case 'price-asc':
-                return productosCopia.sort((a, b) => a.precio - b.precio);
-            case 'price-desc':
-                return productosCopia.sort((b, a) => a.precio - b.precio);
-            case 'name':
-                return productosCopia.sort((a, b) => a.nombre.localeCompare(b.nombre));
-            default:
-                return productosCopia;
-        }
-    }
+            function ordenarProductos(productos, criterio) {
+                const productosCopia = [...productos];
+                switch (criterio) {
+                    case 'price-asc':
+                        return productosCopia.sort((a, b) => a.precio - b.precio);
+                    case 'price-desc':
+                        return productosCopia.sort((b, a) => a.precio - b.precio);
+                    case 'name':
+                        return productosCopia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    default:
+                        return productosCopia;
+                }
+            }
 
-    function aplicarFiltros(productos) {
-        const tipoFiltros = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(checkbox => checkbox.value);
-        const marcaFiltros = Array.from(document.querySelectorAll('input[name="marca"]:checked')).map(checkbox => checkbox.value);
+            function aplicarFiltros(productos) {
+                const tipoFiltros = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(checkbox => checkbox.value);
+                const marcaFiltros = Array.from(document.querySelectorAll('input[name="marca"]:checked')).map(checkbox => checkbox.value);
 
-        return productos.filter(producto => {
-            const pasaTipo = tipoFiltros.length === 0 || tipoFiltros.includes(producto.tipo);
-            const pasaMarca = marcaFiltros.length === 0 || marcaFiltros.includes(producto.marca);
-            return pasaTipo && pasaMarca;
-        });
-    }
+                return productos.filter(producto => {
+                    const pasaTipo = tipoFiltros.length === 0 || tipoFiltros.includes(producto.tipo);
+                    const pasaMarca = marcaFiltros.length === 0 || marcaFiltros.includes(producto.marca);
+                    return pasaTipo && pasaMarca;
+                });
+            }
 
-    function filtrarPorPrecio(productos) {
-        const precioMinInput = document.querySelector('.price-inputs input[placeholder="De"]').value;
-        const precioMaxInput = document.querySelector('.price-inputs input[placeholder="A"]').value;
+            function filtrarPorPrecio(productos) {
+                const precioMinInput = document.querySelector('.price-inputs input[placeholder="De"]').value;
+                const precioMaxInput = document.querySelector('.price-inputs input[placeholder="A"]').value;
 
-        const precioMin = precioMinInput ? parseInt(precioMinInput.replace(/\./g, ''), 10) : 0;
-        const precioMax = precioMaxInput ? parseInt(precioMaxInput.replace(/\./g, ''), 10) : Infinity;
+                const precioMin = precioMinInput ? parseInt(precioMinInput.replace(/\./g, ''), 10) : 0;
+                const precioMax = precioMaxInput ? parseInt(precioMaxInput.replace(/\./g, ''), 10) : Infinity;
 
-        return productos.filter(producto => producto.precio >= precioMin && producto.precio <= precioMax);
-    }
+                return productos.filter(producto => producto.precio >= precioMin && producto.precio <= precioMax);
+            }
 
-    let productosFiltrados = filtrarPorIds([[1, 8]]);
+            let productosFiltrados = filtrarPorIds([[1, 8]]);
 
-    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
-
-    document.getElementById('sort-select').addEventListener('change', function () {
-        const criterio = this.value;
-        const productosOrdenados = ordenarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)), criterio);
-        renderizarProductos(productosOrdenados);
-    });
-
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
             renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
-        });
-    });
 
-    document.querySelectorAll('.price-inputs input').forEach(input => {
-        input.addEventListener('input', function () {
-            renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+            document.getElementById('sort-select').addEventListener('change', function () {
+                const criterio = this.value;
+                const productosOrdenados = ordenarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)), criterio);
+                renderizarProductos(productosOrdenados);
+            });
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+                });
+            });
+
+            document.querySelectorAll('.price-inputs input').forEach(input => {
+                input.addEventListener('input', function () {
+                    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+                });
+            });
         });
-    });
-});
     </script>
 </body>
 </html>
