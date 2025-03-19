@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - MedSev</title>
+    <link rel="stylesheet" href="cart.css">
+    <script src="../js/header.js"></script>
+    <link rel="icon" href="../image/icono.png" type="image/x-icon">
+    
+</head>
+<body>
+    <header class="header">
+        <a class="navbar-brand" href="../index.html">
+            <img src="../image/logoInv.png" alt="logo" width="150" height="70" class="d-inline-block align-text-top" id="medserver-logo">
+        </a>
+
+        <div class="progress-container">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <div class="step-text">Carro</div>
+            </div>
+            
+            <div class="line active-left"></div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">Pago</div>
+            </div>
+            
+            <div class="line"></div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">Finalizado</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="cart-container">
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+    
+    <script src="../js/productos.js"></script>
+    <script src="cart.js"></script>
+    <script src="../js/footer.js"></script>
+    <script>
+        inicializarHeader('header-container', '');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const footer = new Footer();
+            footer.render('#footer-container');
+            const cart = new ShoppingCart();
+            cart.updateCartUI();
+        });
+    </script>
+</body>
+</html>

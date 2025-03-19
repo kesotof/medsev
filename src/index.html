@@ -6,6 +6,8 @@
   <title>MedServer </title>
   <script src="js/header.js"></script>
   <link rel="stylesheet" href="css/index.css">
+  <script src="cart/cart.js"></script>
+  <link rel="icon" href="image/icono.png" type="image/x-icon">
 </head>
 <body>
   <div id="header-container"></div>
@@ -154,6 +156,33 @@
     <script>
         const footer = new Footer();
         footer.render('#footer-container');
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cart = new ShoppingCart();
+
+            const addToCartButtons = document.querySelectorAll('.producto-boton:not(.producto-boton-agotado)');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = this.closest('.producto-card');
+                    const nombre = card.querySelector('.producto-nombre').textContent;
+                    const marca = card.querySelector('.producto-marca').textContent;
+                    const precioText = card.querySelector('.producto-precio-actual').textContent.replace('$', '').replace('.', '');
+                    const precio = parseInt(precioText);
+                    const imagen = card.querySelector('.producto-imagen').src;
+                    const producto = {
+                        id: Math.floor(Math.random() * 1000) + 100,
+                        nombre,
+                        marca,
+                        precio,
+                        cantidad: 100,
+                        imagen
+                    };
+                    cart.addToCart(producto);
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -53,3 +53,18 @@ let inventario = [
   if (inventarioGuardado) {
     inventario = inventarioGuardado;
   }
+
+  guardarInventario();
+
+function sincronizarInventarioActualizado() {
+    const inventarioActualizado = localStorage.getItem("equipamiento_actualizado");
+    if (inventarioActualizado) {
+        try {
+            const productosActualizados = JSON.parse(inventarioActualizado);
+            localStorage.setItem("inventario", inventarioActualizado);
+            localStorage.removeItem("equipamiento_actualizado");
+        } catch (e) {
+            console.error("Error al sincronizar inventario actualizado:", e);
+        }
+    }
+}
