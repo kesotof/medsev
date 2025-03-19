@@ -242,7 +242,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
       justify-content: center;
       font-size: 12px;
       font-weight: bold;
-      text-indent: 3px;
+      text-indent: 4px;
     }
 
     /* Estilos para el modal del carrito */
@@ -722,7 +722,7 @@ document.body.appendChild(cartModal);
     event.stopPropagation();
     console.log('Clic en botón ver carrito');
     const baseUrl = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
-    const cartPath = baseUrl.endsWith('src') ? 'cart/index.html' : '../cart/index.html';
+    const cartPath = baseUrl.endsWith('src') ? 'cart/carrito.html' : '../cart/carrito.html';
     window.location.href = cartPath;
   }
   

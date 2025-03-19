@@ -17,7 +17,6 @@
             </div>
             
             <div id="cart-container">
-                <!-- El contenido del carrito se cargará mediante JavaScript -->
             </div>
         </div>
     </div>
@@ -28,14 +27,11 @@
     <script src="cart.js"></script>
     <script src="../js/footer.js"></script>
     <script>
-        // Inicializar componentes
         inicializarHeader('header-container', '');
 
         document.addEventListener('DOMContentLoaded', function() {
             const footer = new Footer();
             footer.render('#footer-container');
-            
-            // Inicializar el carrito y mostrar su contenido
             const cart = new ShoppingCart();
             cart.updateCartUI();
         });

@@ -4,21 +4,17 @@ class ShoppingCart {
         this.updateCartCounter();
     }
 
-    // Obtener el carrito desde localStorage
     getCart() {
         const storedCart = localStorage.getItem('medserverCart');
         return storedCart ? JSON.parse(storedCart) : [];
     }
 
-    // Guardar el carrito en localStorage
     saveCart() {
         localStorage.setItem('medserverCart', JSON.stringify(this.cart));
         this.updateCartCounter();
     }
 
-    // Añadir producto al carrito
     addToCart(product) {
-        // Asegurar que el producto tiene ID
         if (!product.id) {
             product.id = Math.floor(Math.random() * 100000);
         }
@@ -26,7 +22,6 @@ class ShoppingCart {
         const existingProductIndex = this.cart.findIndex(item => item.id === product.id);
         
         if (existingProductIndex > -1) {
-            // Si el producto ya está en el carrito, incrementar la cantidad
             if (this.cart[existingProductIndex].cantidadEnCarrito < product.cantidad) {
                 this.cart[existingProductIndex].cantidadEnCarrito += 1;
                 this.showNotification(`${product.nombre || 'Producto'} actualizado en el carrito`);
@@ -35,7 +30,6 @@ class ShoppingCart {
                 return false;
             }
         } else {
-            // Si el producto no está en el carrito, añadirlo con cantidad 1
             const cartProduct = { ...product, cantidadEnCarrito: 1 };
             this.cart.push(cartProduct);
             this.showNotification(`${product.nombre || 'Producto'} añadido al carrito`);
@@ -46,7 +40,6 @@ class ShoppingCart {
         return true;
     }
 
-    // Eliminar producto del carrito
     removeFromCart(id) {
         this.cart = this.cart.filter(item => item.id !== id);
         this.saveCart();
@@ -54,7 +47,6 @@ class ShoppingCart {
         this.updateCartUI();
     }
 
-    // Actualizar cantidad de un producto
     updateQuantity(id, quantity) {
         const productIndex = this.cart.findIndex(item => item.id === id);
         
@@ -75,7 +67,6 @@ class ShoppingCart {
         return false;
     }
 
-    // Vaciar el carrito
     clearCart() {
         this.cart = [];
         this.saveCart();
@@ -83,17 +74,14 @@ class ShoppingCart {
         this.updateCartUI();
     }
 
-    // Calcular el total del carrito
     calculateTotal() {
         return this.cart.reduce((total, item) => 
             total + (item.precio * item.cantidadEnCarrito), 0);
     }
 
-    // Actualizar el contador del carrito en el header
     updateCartCounter() {
         const cartIcon = document.querySelector('.cart-icon');
         if (cartIcon) {
-            // Crear o actualizar el contador
             let counter = document.querySelector('.cart-counter');
             const itemCount = this.cart.reduce((count, item) => count + item.cantidadEnCarrito, 0);
             
@@ -113,7 +101,6 @@ class ShoppingCart {
         }
     }
 
-    // Mostrar una notificación
     showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -121,7 +108,6 @@ class ShoppingCart {
         
         document.body.appendChild(notification);
         
-        // Estilo para la notificación
         notification.style.position = 'fixed';
         notification.style.bottom = '20px';
         notification.style.right = '20px';
@@ -135,14 +121,11 @@ class ShoppingCart {
         } else {
             notification.style.backgroundColor = '#F44336';
         }
-        
-        // Eliminar la notificación después de 3 segundos
         setTimeout(() => {
             notification.remove();
         }, 3000);
     }
     
-    // Abrir/cerrar el modal del carrito
     toggleCartModal() {
         const cartModal = document.getElementById('cart-modal');
         const overlay = document.querySelector('.cart-modal-overlay');
@@ -152,7 +135,6 @@ class ShoppingCart {
             return;
         }
         
-        // Usar getComputedStyle para obtener el valor real
         const currentDisplay = window.getComputedStyle(cartModal).display;
         
         if (currentDisplay === 'none') {
@@ -167,7 +149,6 @@ class ShoppingCart {
         }
     }
 
-    // Actualizar el contenido del modal del carrito
     updateCartModalContent() {
         const modalBody = document.querySelector('.cart-modal-body');
         const totalElement = document.getElementById('cart-modal-total-price');
@@ -207,17 +188,12 @@ class ShoppingCart {
                 </div>
             `;
         });
-        
         modalBody.innerHTML = cartItems;
         totalElement.textContent = `$${formatPrice(this.calculateTotal())}`;
-        
-        // Adjuntar eventos a los elementos del modal
         this.attachCartModalEvents();
     }
 
-    // Adjuntar eventos a los elementos del modal del carrito
     attachCartModalEvents() {
-        // Botones de disminuir cantidad
         const minusButtons = document.querySelectorAll('.cart-modal-quantity-btn.minus');
         minusButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -232,8 +208,7 @@ class ShoppingCart {
                 }
             });
         });
-        
-        // Botones de aumentar cantidad
+
         const plusButtons = document.querySelectorAll('.cart-modal-quantity-btn.plus');
         plusButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -250,7 +225,6 @@ class ShoppingCart {
             });
         });
         
-        // Inputs de cantidad
         const quantityInputs = document.querySelectorAll('.cart-modal-quantity-input');
         quantityInputs.forEach(input => {
             input.addEventListener('change', (e) => {
@@ -269,7 +243,6 @@ class ShoppingCart {
             });
         });
         
-        // Botones de eliminar producto
         const removeButtons = document.querySelectorAll('.cart-modal-item-remove');
         removeButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -280,8 +253,7 @@ class ShoppingCart {
             });
         });
     }
-    
-    // Generar HTML para el modal del carrito
+
     generateCartHTML() {
         if (this.cart.length === 0) {
             return `
@@ -356,7 +328,6 @@ class ShoppingCart {
         return cartHTML;
     }
 
-    // Actualizar la interfaz del carrito
     updateCartUI() {
         const cartContainer = document.getElementById('cart-container');
         if (cartContainer) {
@@ -365,9 +336,7 @@ class ShoppingCart {
         }
     }
 
-    // Adjuntar eventos a los elementos del carrito
     attachCartEvents() {
-        // Botones de eliminar producto
         const removeButtons = document.querySelectorAll('.remove-btn');
         removeButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -376,7 +345,6 @@ class ShoppingCart {
             });
         });
 
-        // Botones de cambio de cantidad
         const minusButtons = document.querySelectorAll('.quantity-btn.minus');
         const plusButtons = document.querySelectorAll('.quantity-btn.plus');
         const quantityInputs = document.querySelectorAll('.quantity-input');
@@ -411,7 +379,6 @@ class ShoppingCart {
             });
         });
 
-        // Botón de vaciar carrito
         const clearCartButton = document.querySelector('.clear-cart');
         if (clearCartButton) {
             clearCartButton.addEventListener('click', () => {
@@ -421,7 +388,6 @@ class ShoppingCart {
             });
         }
 
-        // Botón de checkout
         const checkoutButton = document.querySelector('.checkout');
         if (checkoutButton) {
             checkoutButton.addEventListener('click', () => {
@@ -431,5 +397,4 @@ class ShoppingCart {
     }
 }
 
-// Exportar la clase para que esté disponible globalmente
 window.ShoppingCart = ShoppingCart;

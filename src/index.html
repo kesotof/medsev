@@ -159,12 +159,9 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar carrito
             const cart = new ShoppingCart();
-            
-            // Añadir evento a los botones de "Añadir al Carrito" en productos destacados
+
             const addToCartButtons = document.querySelectorAll('.producto-boton:not(.producto-boton-agotado)');
-            
             addToCartButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const card = this.closest('.producto-card');
@@ -173,17 +170,14 @@
                     const precioText = card.querySelector('.producto-precio-actual').textContent.replace('$', '').replace('.', '');
                     const precio = parseInt(precioText);
                     const imagen = card.querySelector('.producto-imagen').src;
-                    
-                    // Crear un objeto de producto para añadir al carrito
                     const producto = {
-                        id: Math.floor(Math.random() * 1000) + 100, // ID aleatorio para productos destacados
+                        id: Math.floor(Math.random() * 1000) + 100,
                         nombre,
                         marca,
                         precio,
-                        cantidad: 100, // Stock ficticio para productos destacados
+                        cantidad: 100,
                         imagen
                     };
-                    
                     cart.addToCart(producto);
                 });
             });
