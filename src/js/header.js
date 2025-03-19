@@ -458,13 +458,11 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
 
   function obtenerRutaLogo() {
     const rutas = ['image/logo.png', '../image/logo.png'];
-    
     const verificarRuta = (ruta) => {
       return cargarImagen(ruta)
         .then(() => ruta)
         .catch(() => null);
     };
-    
     return Promise.all(rutas.map(verificarRuta))
       .then(resultados => {
         const rutaValida = resultados.filter(ruta => ruta !== null)[0];

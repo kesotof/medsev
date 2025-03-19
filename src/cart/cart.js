@@ -328,7 +328,6 @@ class ShoppingCart {
     }
 
     attachCartEvents() {
-        // Corregido: cambiamos de 'tr' a '.cart-item'
         const removeButtons = document.querySelectorAll('.remove-btn');
         removeButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -346,7 +345,6 @@ class ShoppingCart {
 
         minusButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                // Corregido: cambiamos de 'tr' a '.cart-item'
                 const item = e.target.closest('.cart-item');
                 if (item) {
                     const productId = parseInt(item.dataset.id);
@@ -354,7 +352,7 @@ class ShoppingCart {
                     if (input && input.value > 1) {
                         input.value = parseInt(input.value) - 1;
                         if (this.updateQuantity(productId, parseInt(input.value))) {
-                            this.updateCartUI(); // Actualizamos la UI después del cambio
+                            this.updateCartUI();
                         }
                     }
                 }
@@ -363,7 +361,6 @@ class ShoppingCart {
 
         plusButtons.forEach(button => {
             button.addEventListener('click', (e) => {
-                // Corregido: cambiamos de 'tr' a '.cart-item'
                 const item = e.target.closest('.cart-item');
                 if (item) {
                     const productId = parseInt(item.dataset.id);
@@ -371,7 +368,7 @@ class ShoppingCart {
                     if (input) {
                         const newValue = parseInt(input.value) + 1;
                         if (this.updateQuantity(productId, newValue)) {
-                            this.updateCartUI(); // Actualizamos la UI después del cambio
+                            this.updateCartUI();
                         }
                     }
                 }
@@ -385,9 +382,8 @@ class ShoppingCart {
                 if (item) {
                     const productId = parseInt(item.dataset.id);
                     if (this.updateQuantity(productId, parseInt(e.target.value))) {
-                        this.updateCartUI(); // Actualizamos la UI después del cambio
+                        this.updateCartUI();
                     } else {
-                        // Si falla (ej: fuera de stock), restauramos el valor anterior
                         const product = this.cart.find(p => p.id === productId);
                         if (product) {
                             e.target.value = product.cantidadEnCarrito;
@@ -409,7 +405,7 @@ class ShoppingCart {
         const checkoutButton = document.querySelector('.checkout');
         if (checkoutButton) {
             checkoutButton.addEventListener('click', () => {
-                window.location.href = './checkout.html';
+                window.location.href = 'pago.html';
             });
         }
     }
@@ -417,16 +413,13 @@ class ShoppingCart {
 
 window.ShoppingCart = ShoppingCart;
 
-// Inicialización del carrito cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
     const cart = new ShoppingCart();
     
-    // Si estamos en la página del carrito, actualizar la UI
     if (document.getElementById('cart-container')) {
         cart.updateCartUI();
     }
     
-    // Añadir listener para el icono del carrito
     const cartIcon = document.querySelector('.cart-icon');
     if (cartIcon) {
         cartIcon.addEventListener('click', () => {
