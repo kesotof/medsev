@@ -101,6 +101,15 @@
                 const contenedor = document.getElementById('products-container');
                 contenedor.innerHTML = '';
                 productos.forEach(producto => {
+                    const estaAgotado = producto.cantidad <= 0;
+                    const stockText = estaAgotado ? 
+                        '<div class="stock-info stock-agotado">Agotado</div>' : 
+                        `<div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>`;
+                    
+                    const botonClass = estaAgotado ? 
+                        'add-to-cart producto-boton-agotado' : 
+                        'add-to-cart';
+                        
                     const card = document.createElement('div');
                     card.className = 'product-card';
                     card.dataset.id = producto.id;
@@ -112,15 +121,17 @@
                             <div class="product-brand">${producto.marca}</div>
                             <div class="product-name">${producto.nombre}</div>
                             <div class="product-price">$${formatearPrecio(producto.precio)}</div>
-                            <div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>
-                            <button class="add-to-cart">Añadir al Carrito</button>
+                            ${stockText}
+                            <button class="${botonClass}" ${estaAgotado ? 'disabled' : ''}>
+                                ${estaAgotado ? 'Agotado' : 'Añadir al Carrito'}
+                            </button>
                         </div>
                     `;
                     contenedor.appendChild(card);
                 });
                 document.getElementById('product-count').textContent = `${productos.length} Productos`;
-                
-                const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+                const addToCartButtons = document.querySelectorAll('.add-to-cart:not(.producto-boton-agotado)');
                 addToCartButtons.forEach(button => {
                     button.addEventListener('click', function() {
                         const card = this.closest('.product-card');

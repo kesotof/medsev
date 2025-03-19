@@ -694,7 +694,6 @@ document.body.appendChild(cartModal);
   function closeBtnClickHandler(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log('Clic en botón cerrar');
     if (window.ShoppingCart) {
       const cart = new ShoppingCart();
       cart.toggleCartModal();
@@ -706,7 +705,6 @@ document.body.appendChild(cartModal);
   function continueBtnClickHandler(event) {
     event.preventDefault();
     event.stopPropagation();
-    console.log('Clic en botón continuar');
     if (window.ShoppingCart) {
       const cart = new ShoppingCart();
       cart.toggleCartModal();

@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cartItems.length === 0) {
         orderSummary.innerHTML = `
             <div class="empty-cart-message">
-                <p>Tu carrito está vacío</p>
                 <p>Debes agregar productos antes de continuar con el pago.</p>
                 <button class="back-to-cart" onclick="window.location.href='carrito.html'">Volver al carrito</button>
             </div>
@@ -123,12 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
         continueButton.addEventListener('click', function() {
             continueButton.disabled = true;
             continueButton.textContent = 'Procesando...';
-            
+            const productosComprados = JSON.stringify(cartItems);
+            localStorage.setItem('productosComprados', productosComprados);
+        
             setTimeout(() => {
                 cart.clearCart();
-                cart.showNotification('¡Pago procesado con éxito!', 'success');
                 setTimeout(() => {
-                    window.location.href = '../index.html';
+                    window.location.href = 'finalizado.html';
                 }, 2000);
             }, 1500);
         });
