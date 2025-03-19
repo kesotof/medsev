@@ -6,7 +6,6 @@
     <title>Catálogo de Equipamiento Médico</title>
     <link rel="stylesheet" href="../css/equipamiento.css">
     <script src="../js/header.js"></script>
-    <!-- Incluir el script del carrito -->
     <script src="../cart/cart.js"></script>
 </head>
 <body>
@@ -76,7 +75,6 @@
                     </div>
                 </div>
                 <div class="products-grid" id="products-container">
-                    <!-- Los productos se cargarán aquí con JavaScript -->
                 </div>
             </div>
         </div>
@@ -93,7 +91,6 @@
     <script src="../js/productos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Inicializar el carrito
             const cart = new ShoppingCart();
             
             function formatearPrecio(precio) {
@@ -106,7 +103,7 @@
                 productos.forEach(producto => {
                     const card = document.createElement('div');
                     card.className = 'product-card';
-                    card.dataset.id = producto.id; // Añadir el ID como atributo data-id
+                    card.dataset.id = producto.id;
                     card.innerHTML = `
                         <div class="product-image">
                             <img src="${producto.imagen}" alt="${producto.nombre}">
@@ -123,7 +120,6 @@
                 });
                 document.getElementById('product-count').textContent = `${productos.length} Productos`;
                 
-                // Añadir eventos a los botones de "Añadir al Carrito"
                 const addToCartButtons = document.querySelectorAll('.add-to-cart');
                 addToCartButtons.forEach(button => {
                     button.addEventListener('click', function() {
