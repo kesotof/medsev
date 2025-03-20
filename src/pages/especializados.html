@@ -145,21 +145,24 @@
                     card.className = 'product-card';
                     card.dataset.id = producto.id;
                     card.innerHTML = `
-                        <div class="product-image">
-                            <img src="${producto.imagen}" alt="${producto.nombre}">
-                        </div>
-                        <div class="product-info">
-                            <div class="product-brand">${producto.marca}</div>
-                            <div class="product-name">${producto.nombre}</div>
-                            <div class="product-price">$${formatearPrecio(producto.precio)}</div>
-                            ${stockText}
-                            <button class="${botonClass}" ${estaAgotado ? 'disabled' : ''}>
-                                ${estaAgotado ? 'Agotado' : 'Añadir al Carrito'}
-                            </button>
-                        </div>
+                        <a href="../pages/productos.html?id=${producto.id}" class="product-link" style="text-decoration: none; color: inherit;">
+                            <div class="product-image">
+                                <img src="${producto.imagen}" alt="${producto.nombre}">
+                            </div>
+                            <div class="product-info">
+                                <div class="product-brand">${producto.marca}</div>
+                                <div class="product-name">${producto.nombre}</div>
+                                <div class="product-price">$${formatearPrecio(producto.precio)}</div>
+                                ${stockText}
+                            </div>
+                        </a>
+                        <button class="${botonClass}" ${estaAgotado ? 'disabled' : ''}>
+                            ${estaAgotado ? 'Agotado' : 'Añadir al Carrito'}
+                        </button>
                     `;
                     contenedor.appendChild(card);
                 });
+
                 document.getElementById('product-count').textContent = `${productos.length} Productos`;
 
                 const addToCartButtons = document.querySelectorAll('.add-to-cart:not(.producto-boton-agotado)');
