@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Insumos Médico</title>
+    <link rel="stylesheet" href="../css/repuesto.css">
+    <script src="../js/header.js"></script>
+    <script src="../cart/cart.js"></script>
+    <link rel="icon" href="../image/icono.png" type="image/x-icon">
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <div class="banner">
+        <h1>Insumos Medicos</h1>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="filters">
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span>PRECIO</span>
+                            <span class="icon">−</span>
+                        </div>
+                        <div>El precio más alto es $99.900</div>
+                        <div class="price-inputs">
+                            <div>
+                                <span>$</span>
+                                <input type="text" placeholder="De">
+                            </div>
+                            <div>
+                                <span>$</span>
+                                <input type="text" placeholder="A">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span>Tipos de Insumos Médicos</span>
+                            <span class="icon">−</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="tipo" value="Repuestos para Equipos Médicos"> Repuestos para Equipos Médicos <span class="count-badge">2</span></label>
+                            <label><input type="checkbox" name="tipo" value="Accesorios para Equipamiento"> Accesorios para Equipamiento <span class="count-badge">2</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span>MARCA</span>
+                            <span class="icon">−</span>
+                        </div>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="marca" value="Olimex"> Olimex <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Safe Care"> Safe Care <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="GLOMED"> GLOMED <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Vitality"> Vitality <span class="count-badge">1</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="products-container">
+                <div class="products-header">
+                    <div id="product-count">1 Producto</div>
+                    <div>
+                        Ordenar por:
+                        <select id="sort-select">
+                            <option value="price-asc">-</option>
+                            <option value="price-asc">Precio más bajo</option>
+                            <option value="price-desc">Precio más alto</option>
+                            <option value="name">Nombre</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="products-grid" id="products-container">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-container"></div>
+    <script src="../js/footer.js"></script>
+    <script>
+      inicializarHeader('header-container', 'equipamiento');
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoria = urlParams.get('categoria');
+        
+        if (categoria === 'Repuestos para Equipos Médicos') {
+            const repuestosCheckbox = document.querySelector('input[name="tipo"][value="Repuestos para Equipos Médicos"]');
+            if (repuestosCheckbox) {
+                repuestosCheckbox.checked = true;
+                repuestosCheckbox.dispatchEvent(new Event('change'));
+            }
+        } 
+        else if (categoria === 'Accesorios para Equipamiento') {
+            const AccesoriosCheckbox = document.querySelector('input[name="tipo"][value="Accesorios para Equipamiento"]');
+            if (AccesoriosCheckbox) {
+                AccesoriosCheckbox.checked = true;
+                AccesoriosCheckbox.dispatchEvent(new Event('change'));
+            }
+        }
+        });
+    </script>
+    <script>
+        const footer = new Footer();
+        footer.render('#footer-container');
+    </script>
+    <script src="../js/productos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cart = new ShoppingCart();
+            
+            function formatearPrecio(precio) {
+                return precio.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            function renderizarProductos(productos) {
+                const contenedor = document.getElementById('products-container');
+                contenedor.innerHTML = '';
+                productos.forEach(producto => {
+                    const estaAgotado = producto.cantidad <= 0;
+                    const stockText = estaAgotado ? 
+                        '<div class="stock-info stock-agotado">Agotado</div>' : 
+                        `<div class="stock-info">Stock disponible: ${producto.cantidad} unidades</div>`;
+                    
+                    const botonClass = estaAgotado ? 
+                        'add-to-cart producto-boton-agotado' : 
+                        'add-to-cart';
+                        
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.dataset.id = producto.id;
+                    card.innerHTML = `
+                        <div class="product-image">
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand">${producto.marca}</div>
+                            <div class="product-name">${producto.nombre}</div>
+                            <div class="product-price">$${formatearPrecio(producto.precio)}</div>
+                            ${stockText}
+                            <button class="${botonClass}" ${estaAgotado ? 'disabled' : ''}>
+                                ${estaAgotado ? 'Agotado' : 'Añadir al Carrito'}
+                            </button>
+                        </div>
+                    `;
+                    contenedor.appendChild(card);
+                });
+                document.getElementById('product-count').textContent = `${productos.length} Productos`;
+
+                const addToCartButtons = document.querySelectorAll('.add-to-cart:not(.producto-boton-agotado)');
+                addToCartButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const card = this.closest('.product-card');
+                        const productId = parseInt(card.dataset.id);
+                        const producto = inventario.find(item => item.id === productId);
+                        if (producto) {
+                            cart.addToCart(producto);
+                        }
+                    });
+                });
+            }
+
+            function ordenarProductos(productos, criterio) {
+                const productosCopia = [...productos];
+                switch (criterio) {
+                    case 'price-asc':
+                        return productosCopia.sort((a, b) => a.precio - b.precio);
+                    case 'price-desc':
+                        return productosCopia.sort((b, a) => a.precio - b.precio);
+                    case 'name':
+                        return productosCopia.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    default:
+                        return productosCopia;
+                }
+            }
+
+            function aplicarFiltros(productos) {
+                const tipoFiltros = Array.from(document.querySelectorAll('input[name="tipo"]:checked')).map(checkbox => checkbox.value);
+                const marcaFiltros = Array.from(document.querySelectorAll('input[name="marca"]:checked')).map(checkbox => checkbox.value);
+
+                return productos.filter(producto => {
+                    const pasaTipo = tipoFiltros.length === 0 || tipoFiltros.includes(producto.tipo);
+                    const pasaMarca = marcaFiltros.length === 0 || marcaFiltros.includes(producto.marca);
+                    return pasaTipo && pasaMarca;
+                });
+            }
+
+            function filtrarPorPrecio(productos) {
+                const precioMinInput = document.querySelector('.price-inputs input[placeholder="De"]').value;
+                const precioMaxInput = document.querySelector('.price-inputs input[placeholder="A"]').value;
+
+                const precioMin = precioMinInput ? parseInt(precioMinInput.replace(/\./g, ''), 10) : 0;
+                const precioMax = precioMaxInput ? parseInt(precioMaxInput.replace(/\./g, ''), 10) : Infinity;
+
+                return productos.filter(producto => producto.precio >= precioMin && producto.precio <= precioMax);
+            }
+
+            let productosFiltrados = filtrarPorIds([[16, 19]]);
+
+            renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+
+            document.getElementById('sort-select').addEventListener('change', function () {
+                const criterio = this.value;
+                const productosOrdenados = ordenarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)), criterio);
+                renderizarProductos(productosOrdenados);
+            });
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+                });
+            });
+
+            document.querySelectorAll('.price-inputs input').forEach(input => {
+                input.addEventListener('input', function () {
+                    renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
+                });
+            });
+        });
+    </script>
+</body>
+</html>

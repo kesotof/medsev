@@ -578,10 +578,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
             <li class="catalogo-item ${activeSection === 'repuestos' ? 'active' : ''}">
               Repuestos y Accesorios
               <div class="submenu">
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/repuesto.html?categoria=Repuestos para Equipos Médicos' : '../pages/repuesto.html?categoria=Repuestos para Equipos Médicos'}" class="submenu-item"">
                   <i class="fas fa-tools"></i> Repuestos para Equipos
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/repuesto.html?categoria=Accesorios para Equipamiento' : '../pages/repuesto.html?categoria=Accesorios para Equipamiento'}" class="submenu-item"">
                   <i class="fas fa-cogs"></i> Accesorios para Equipamiento
                 </a>
               </div>
