@@ -26,7 +26,6 @@
         document.addEventListener('DOMContentLoaded', function() {
     const cart = new ShoppingCart();
     
-    // Manejar los botones de "Añadir al Carrito" de productos destacados
     const destacadosButtons = document.querySelectorAll('.productos-destacados-grid .producto-boton:not(.producto-boton-agotado)');
     destacadosButtons.forEach(button => {
         button.addEventListener('click', function() {

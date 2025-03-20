@@ -540,7 +540,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
         <div class="container-fluid">
           <ul class="catalogo-nav">
             <li class="catalogo-item">
-              Equipamiento Médico
+              <a href="${baseUrl.endsWith('src') ? 'pages/equipamiento.html' : '../pages/equipamiento.html'}" style="color: inherit; text-decoration: none;">Equipamiento Médico</a>
               <div class="submenu">
                 <a href="${baseUrl.endsWith('src') ? 'pages/equipamiento.html?categoria=diagnostico' : '../pages/equipamiento.html?categoria=diagnostico'}" class="submenu-item">
                   <i class="fas fa-stethoscope"></i> Diagnóstico
@@ -551,7 +551,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               </div>
             </li>
             <li class="catalogo-item ${activeSection === 'insumos' ? 'active' : ''}">
-              Insumos Médicos
+              <a href="${baseUrl.endsWith('src') ? 'pages/insumos.html' : '../pages/insumos.html'}" style="color: inherit; text-decoration: none;">Insumos Médicos</a>
               <div class="submenu">
                 <a href="${baseUrl.endsWith('src') ? 'pages/insumos.html?categoria=Insumos Descartables' : '../pages/insumos.html?categoria=Insumos Descartables'}" class="submenu-item"">
                   <i class="fas fa-hand-sparkles"></i> Insumos Descartables
@@ -562,7 +562,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               </div>
             </li>
             <li class="catalogo-item ${activeSection === 'especializados' ? 'active' : ''}">
-              Productos Especializados
+              <a href="${baseUrl.endsWith('src') ? 'pages/especializados.html' : '../pages/especializados.html'}" style="color: inherit; text-decoration: none;">Productos Especializados</a>
               <div class="submenu">
                 <a href="${baseUrl.endsWith('src') ? 'pages/especializados.html?categoria=Laboratorio Clínico' : '../pages/especializados.html?categoria=Laboratorio Clínico'}" class="submenu-item">
                   <i class="fas fa-flask"></i> Laboratorio Clínico
@@ -576,7 +576,7 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
               </div>
             </li>
             <li class="catalogo-item ${activeSection === 'repuestos' ? 'active' : ''}">
-              Repuestos y Accesorios
+              <a href="${baseUrl.endsWith('src') ? 'pages/repuesto.html' : '../pages/repuesto.html'}" style="color: inherit; text-decoration: none;">Repuestos y Accesorios</a>
               <div class="submenu">
                 <a href="${baseUrl.endsWith('src') ? 'pages/repuesto.html?categoria=Repuestos para Equipos Médicos' : '../pages/repuesto.html?categoria=Repuestos para Equipos Médicos'}" class="submenu-item"">
                   <i class="fas fa-tools"></i> Repuestos para Equipos
