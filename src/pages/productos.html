@@ -22,5 +22,35 @@
     <script src="../js/productos.js"></script>
 
     <script src="../js/productD.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const cart = new ShoppingCart();
+    
+    // Manejar los botones de "Añadir al Carrito" de productos destacados
+    const destacadosButtons = document.querySelectorAll('.productos-destacados-grid .producto-boton:not(.producto-boton-agotado)');
+    destacadosButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const card = this.closest('.producto-card');
+            const productId = parseInt(card.dataset.id);
+            const nombre = card.querySelector('.producto-nombre').textContent;
+            const marca = card.querySelector('.producto-marca').textContent;
+            const precioText = card.querySelector('.producto-precio-actual').textContent.replace('$', '').replace('.', '');
+            const precio = parseInt(precioText);
+            const imagen = card.querySelector('.producto-imagen').src;
+            
+            const producto = {
+                id: productId,
+                nombre,
+                marca,
+                precio,
+                cantidad: 100,
+                imagen
+            };
+            
+            cart.addToCart(producto);
+        });
+    });
+});
+    </script>
 </body>
 </html>
