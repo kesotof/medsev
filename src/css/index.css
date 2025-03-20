@@ -86,14 +86,12 @@
     height: 8px;
   }
 
-/* Contenedor principal */
 .tu-clase-contenedor-principal {
   padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Título de sección */
 .tu-clase-titulo-seccion {
   text-align: center;
   color: #555;
@@ -102,7 +100,6 @@
   font-weight: 500;
 }
 
-/* Grid de colecciones */
 .tu-clase-grid-colecciones {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -110,18 +107,15 @@
   gap: 20px;
 }
 
-/* Las tarjetas grandes ocupan 1 columna completa */
 .tu-clase-tarjeta-grande {
   grid-column: span 1;
   height: 350px;
 }
 
-/* Las tarjetas pequeñas */
 .tu-clase-tarjeta-pequena {
   height: 250px;
 }
 
-/* Estilo común para todas las tarjetas */
 .tu-clase-tarjeta-coleccion {
   position: relative;
   overflow: hidden;
@@ -129,14 +123,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenedor de imagen */
 .tu-clase-imagen-contenedor {
   position: relative;
   height: 100%;
   width: 100%;
 }
 
-/* Estilo de la imagen */
 .tu-clase-imagen {
   width: 100%;
   height: 100%;
@@ -144,7 +136,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Overlay con degradado */
 .tu-clase-overlay {
   position: absolute;
   bottom: 0;
@@ -158,9 +149,8 @@
   height: 100%;
 }
 
-/* Estilo del botón */
 .tu-clase-boton {
-  background-color: #09B6AD; /* Color turquesa como en la imagen */
+  background-color: #09B6AD;
   color: white;
   text-decoration: none;
   padding: 10px 15px;
@@ -175,20 +165,8 @@
   background-color: #078b85;
 }
 
-/* Efecto hover en la tarjeta */
 .tu-clase-tarjeta-coleccion:hover .tu-clase-imagen {
   transform: scale(1.05);
-}
-
-/* Diseño responsive */
-@media (max-width: 768px) {
-  .tu-clase-grid-colecciones {
-      grid-template-columns: 1fr;
-  }
-  
-  .tu-clase-tarjeta-grande {
-      grid-column: span 1;
-  }
 }
 
 .productos-destacados-container {
@@ -362,6 +340,100 @@
   margin-left: 5px;
 }
 
+.marcas-container {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.marcas-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.marcas-titulo {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.marcas-titulo span {
+  color: #0053a0;
+  font-weight: bold;
+}
+
+.marcas-carousel-container {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+.marcas-carousel {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.marcas-carousel-item {
+  min-width: 250px;
+  height: 100px;
+  margin: 0 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marcas-carousel-item img {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.marcas-carousel-item img:hover {
+  filter: grayscale(0%);
+}
+
+.marcas-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #223c6f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.3s;
+}
+
+.marcas-nav-btn:hover {
+  background-color: #223c6f;
+}
+
+.marcas-nav-btn-prev {
+  left: 0;
+}
+
+.marcas-nav-btn-next {
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .marcas-carousel-item {
+      min-width: 200px;
+  }
+}
+
+
 @media (max-width: 1024px) {
   .productos-destacados-grid {
       grid-template-columns: repeat(4, 1fr);
@@ -377,5 +449,15 @@
 @media (max-width: 576px) {
   .productos-destacados-grid {
       grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .tu-clase-grid-colecciones {
+      grid-template-columns: 1fr;
+  }
+  
+  .tu-clase-tarjeta-grande {
+      grid-column: span 1;
   }
 }
