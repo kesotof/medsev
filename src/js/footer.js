@@ -1,68 +1,17 @@
 class Footer {
     constructor() {
-        this.footerHTML = `
-            <footer class="footer-container">
-                <!-- Sección Newsletter -->
-                <div class="newsletter-section">
-                    <div class="newsletter-content">
-                        <div class="newsletter-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4e99e9" width="36" height="36">
-                                <path d="M20,4H4C2.9,4,2,4.9,2,6v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V6C22,4.9,21.1,4,20,4z M20,8l-8,5L4,8V6l8,5l8-5V8z"/>
-                            </svg>
-                        </div>
-                        <div class="newsletter-text">
-                            <h3>Regístrate</h3>
-                            <p>¡Regístrate y recibe las mejores ofertas en tu correo!</p>
-                        </div>
-                        <div class="newsletter-form">
-                            <input type="email" placeholder="Tu correo electrónico" class="email-input">
-                            <button class="subscribe-button">¡Regístrate</button>
-                        </div>
-                    </div>
-                </div>
+        this.logoPath = 'image/logo.png';
 
-                <!-- Contenido principal del footer -->
-                <div class="footer-main">
-                    <div class="footer-logo">
-                        <img src="../image/logo.png" alt="Logo">
-                    </div>
+        this.cargarImagen = (src) => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(src);
+                img.onerror = () => reject();
+                img.src = src;
+            });
+        };
 
-                    <div class="footer-column">
-                        <h4>SOBRE NOSOTROS</h4>
-                        <ul>
-                            <li><a href="#">Nosotros</a></li>
-                            <li><a href="#">Contacto</a></li>
-                            <li><a href="#">Preguntas Frecuentes</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="footer-column">
-                        <h4>SERVICIO AL CLIENTE</h4>
-                        <ul>
-                            <li><a href="#">Preguntas Frecuentes</a></li>
-                            <li><a href="#">Métodos de Envío</a></li>
-                            <li><a href="#">Términos de Servicio</a></li>
-                            <li><a href="#">Repuestos</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="footer-column">
-                        <h4>MEDIOS DE PAGO</h4>
-                        <div class="payment-methods">
-                            <img src="https://woocommerce.com/wp-content/uploads/2021/05/tw-mercado-pago-v2@2x.png" alt="MercadoPago">
-                            <img src="https://static.vecteezy.com/system/resources/previews/020/336/392/non_2x/visa-logo-visa-icon-free-free-vector.jpg" alt="Visa">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/800px-Mastercard-logo.svg.png" alt="Mastercard">
-                        </div>
-                        <div class="secure-purchase">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4e99e9" width="24" height="24">
-                                <path d="M12,1L3,5v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12V5L12,1z M12,11.7h7c-0.5,4.2-3.5,7.9-7,9V11.7z M5,11.7h7v9C8.5,19.6,5.5,15.9,5,11.7z M12,3.3l6.9,3.1H5.1L12,3.3z"/>
-                            </svg>
-                            <span>COMPRA SEGURA</span>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        `;
+        this.footerHTML = this.generateFooterHTML(this.logoPath);
 
         this.footerCSS = `
             <style>
@@ -232,12 +181,104 @@ class Footer {
                 }
             </style>
         `;
+
+        this.obtenerRutaLogo().then(ruta => {
+            this.logoPath = ruta;
+            const logoImg = document.querySelector('.footer-logo img');
+            if (logoImg) {
+                logoImg.src = this.logoPath;
+            }
+        });
+    }
+
+    obtenerRutaLogo() {
+        const rutas = ['image/logo.png', '../image/logo.png'];
+        const verificarRuta = (ruta) => {
+            return this.cargarImagen(ruta)
+                .then(() => ruta)
+                .catch(() => null);
+        };
+        return Promise.all(rutas.map(verificarRuta))
+            .then(resultados => {
+                const rutaValida = resultados.filter(ruta => ruta !== null)[0];
+                return rutaValida || 'image/logo.png';
+            });
+    }
+
+    generateFooterHTML(logoPath) {
+        return `
+            <footer class="footer-container">
+                <!-- Sección Newsletter -->
+                <div class="newsletter-section">
+                    <div class="newsletter-content">
+                        <div class="newsletter-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4e99e9" width="36" height="36">
+                                <path d="M20,4H4C2.9,4,2,4.9,2,6v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V6C22,4.9,21.1,4,20,4z M20,8l-8,5L4,8V6l8,5l8-5V8z"/>
+                            </svg>
+                        </div>
+                        <div class="newsletter-text">
+                            <h3>Regístrate</h3>
+                            <p>¡Regístrate y recibe las mejores ofertas en tu correo!</p>
+                        </div>
+                        <div class="newsletter-form">
+                            <input type="email" placeholder="Tu correo electrónico" class="email-input">
+                            <button class="subscribe-button">¡Regístrate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido principal del footer -->
+                <div class="footer-main">
+                    <div class="footer-logo">
+                        <img src="${logoPath}" alt="Logo">
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>SOBRE NOSOTROS</h4>
+                        <ul>
+                            <li><a href="#">Nosotros</a></li>
+                            <li><a href="#">Contacto</a></li>
+                            <li><a href="#">Preguntas Frecuentes</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>SERVICIO AL CLIENTE</h4>
+                        <ul>
+                            <li><a href="#">Preguntas Frecuentes</a></li>
+                            <li><a href="#">Métodos de Envío</a></li>
+                            <li><a href="#">Términos de Servicio</a></li>
+                            <li><a href="#">Repuestos</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-column">
+                        <h4>MEDIOS DE PAGO</h4>
+                        <div class="payment-methods">
+                            <img src="https://woocommerce.com/wp-content/uploads/2021/05/tw-mercado-pago-v2@2x.png" alt="MercadoPago">
+                            <img src="https://static.vecteezy.com/system/resources/previews/020/336/392/non_2x/visa-logo-visa-icon-free-free-vector.jpg" alt="Visa">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/800px-Mastercard-logo.svg.png" alt="Mastercard">
+                        </div>
+                        <div class="secure-purchase">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#4e99e9" width="24" height="24">
+                                <path d="M12,1L3,5v6c0,5.5,3.8,10.7,9,12c5.2-1.3,9-6.5,9-12V5L12,1z M12,11.7h7c-0.5,4.2-3.5,7.9-7,9V11.7z M5,11.7h7v9C8.5,19.6,5.5,15.9,5,11.7z M12,3.3l6.9,3.1H5.1L12,3.3z"/>
+                            </svg>
+                            <span>COMPRA SEGURA</span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        `;
     }
 
     render(selector) {
         const container = document.querySelector(selector);
         if (container) {
             container.innerHTML = this.footerCSS + this.footerHTML;
+            const logoImg = container.querySelector('.footer-logo img');
+            if (logoImg && this.logoPath !== 'image/logo.png') {
+                logoImg.src = this.logoPath;
+            }
         } else {
             console.error(`El selector "${selector}" no existe en el DOM.`);
         }
