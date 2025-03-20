@@ -87,6 +87,27 @@
       inicializarHeader('header-container', 'equipamiento');
     </script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoria = urlParams.get('categoria');
+        
+        if (categoria === 'Insumos Descartables') {
+            const Insumos_DescartablesCheckbox = document.querySelector('input[name="tipo"][value="Insumos Descartables"]');
+            if (Insumos_DescartablesCheckbox) {
+                Insumos_DescartablesCheckbox.checked = true;
+                Insumos_DescartablesCheckbox.dispatchEvent(new Event('change'));
+            }
+        } 
+        else if (categoria === 'Líquidos y Soluciones') {
+            const LíquidosCheckbox = document.querySelector('input[name="tipo"][value="Líquidos y Soluciones"]');
+            if (LíquidosCheckbox) {
+                LíquidosCheckbox.checked = true;
+                LíquidosCheckbox.dispatchEvent(new Event('change'));
+            }
+        }
+        });
+    </script>
+    <script>
         const footer = new Footer();
         footer.render('#footer-container');
     </script>

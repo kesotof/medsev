@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Equipamiento Médico</title>
-    <link rel="stylesheet" href="../css/equipamiento.css">
+    <title>Catálogo de Insumos Médico</title>
+    <link rel="stylesheet" href="../css/especializados.css">
     <script src="../js/header.js"></script>
     <script src="../cart/cart.js"></script>
     <link rel="icon" href="../image/icono.png" type="image/x-icon">
@@ -13,8 +13,9 @@
     <div id="header-container"></div>
 
     <div class="banner">
-        <h1>Equipamiento Médico</h1>
+        <h1>Insumos Medicos</h1>
     </div>
+
     <div class="container">
         <div class="main-content">
             <div class="sidebar">
@@ -24,7 +25,7 @@
                             <span>PRECIO</span>
                             <span class="icon">−</span>
                         </div>
-                        <div>El precio más alto es $1.087.000</div>
+                        <div>El precio más alto es $1.952.433</div>
                         <div class="price-inputs">
                             <div>
                                 <span>$</span>
@@ -38,12 +39,13 @@
                     </div>
                     <div class="filter-section">
                         <div class="filter-title">
-                            <span>TIPO DE EQUIPAMIENTO</span>
+                            <span>Tipos de Insumos Médicos</span>
                             <span class="icon">−</span>
                         </div>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="tipo" value="Diagnóstico"> Diagnóstico <span class="count-badge">5</span></label>
-                            <label><input type="checkbox" name="tipo" value="Emergencias"> Emergencias <span class="count-badge">3</span></label>
+                            <label><input type="checkbox" name="tipo" value="Laboratorio Clínico"> Laboratorio Clínico <span class="count-badge">2</span></label>
+                            <label><input type="checkbox" name="tipo" value="Odontología"> Odontología <span class="count-badge">3</span></label>
+                            <label><input type="checkbox" name="tipo" value="Cuidado del Hogar"> Cuidado del Hogar <span class="count-badge">2</span></label>
                         </div>
                     </div>
                     <div class="filter-section">
@@ -52,12 +54,12 @@
                             <span class="icon">−</span>
                         </div>
                         <div class="checkbox-group">
-                            <label><input type="checkbox" name="marca" value="MEDITECH"> MEDITECH <span class="count-badge">1</span></label>
-                            <label><input type="checkbox" name="marca" value="LITTMANN"> LITTMANN <span class="count-badge">1</span></label>
-                            <label><input type="checkbox" name="marca" value="ADC"> ADC® <span class="count-badge">1</span></label>
-                            <label><input type="checkbox" name="marca" value="Creative"> Creative® <span class="count-badge">1</span></label>
-                            <label><input type="checkbox" name="marca" value="Accu-chek"> Accu-chek® <span class="count-badge">1</span></label>
-                            <label><input type="checkbox" name="marca" value="AED"> AED <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="KUANGYE"> KUANGYE <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Accu-chek®"> Accu-chek® <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="PAC"> PAC <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Runyes"> Runyes <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Dixnox"> Dixnox <span class="count-badge">1</span></label>
+                            <label><input type="checkbox" name="marca" value="Omron®"> Omron® <span class="count-badge">2</span></label>
                         </div>
                     </div>
                 </div>
@@ -83,28 +85,35 @@
     <div id="footer-container"></div>
     <script src="../js/footer.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoria = urlParams.get('categoria');
-        
-        if (categoria === 'diagnostico') {
-            const diagnosticoCheckbox = document.querySelector('input[name="tipo"][value="Diagnóstico"]');
-            if (diagnosticoCheckbox) {
-            diagnosticoCheckbox.checked = true;
-            diagnosticoCheckbox.dispatchEvent(new Event('change'));
-            }
-        } 
-        else if (categoria === 'emergencias') {
-            const emergenciasCheckbox = document.querySelector('input[name="tipo"][value="Emergencias"]');
-            if (emergenciasCheckbox) {
-            emergenciasCheckbox.checked = true;
-            emergenciasCheckbox.dispatchEvent(new Event('change'));
-            }
-        }
-        });
+      inicializarHeader('header-container', 'equipamiento');
     </script>
     <script>
-      inicializarHeader('header-container', 'equipamiento');
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoria = urlParams.get('categoria');
+            
+            if (categoria === 'Laboratorio Clínico') {
+                const laboratorioCheckbox = document.querySelector('input[name="tipo"][value="Laboratorio Clínico"]');
+                if (laboratorioCheckbox) {
+                laboratorioCheckbox.checked = true;
+                laboratorioCheckbox.dispatchEvent(new Event('change'));
+                }
+            } 
+            else if (categoria === 'Odontología') {
+                const odontologiaCheckbox = document.querySelector('input[name="tipo"][value="Odontología"]');
+                if (odontologiaCheckbox) {
+                odontologiaCheckbox.checked = true;
+                odontologiaCheckbox.dispatchEvent(new Event('change'));
+                }
+            }
+            else if (categoria === 'Cuidado del Hogar') {
+                const cuidadoHogarCheckbox = document.querySelector('input[name="tipo"][value="Cuidado del Hogar"]');
+                if (cuidadoHogarCheckbox) {
+                cuidadoHogarCheckbox.checked = true;
+                cuidadoHogarCheckbox.dispatchEvent(new Event('change'));
+                }
+            }
+            });
     </script>
     <script>
         const footer = new Footer();
@@ -201,7 +210,7 @@
                 return productos.filter(producto => producto.precio >= precioMin && producto.precio <= precioMax);
             }
 
-            let productosFiltrados = filtrarPorIds([[1, 8]]);
+            let productosFiltrados = filtrarPorIds([[20, 26]]);
 
             renderizarProductos(aplicarFiltros(filtrarPorPrecio(productosFiltrados)));
 

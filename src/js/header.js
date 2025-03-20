@@ -542,10 +542,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
             <li class="catalogo-item">
               Equipamiento Médico
               <div class="submenu">
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/equipamiento.html?categoria=diagnostico' : '../pages/equipamiento.html?categoria=diagnostico'}" class="submenu-item">
                   <i class="fas fa-stethoscope"></i> Diagnóstico
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/equipamiento.html?categoria=emergencias' : '../pages/equipamiento.html?categoria=emergencias'}" class="submenu-item">
                   <i class="fas fa-ambulance"></i> Emergencias
                 </a>
               </div>
@@ -553,10 +553,10 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
             <li class="catalogo-item ${activeSection === 'insumos' ? 'active' : ''}">
               Insumos Médicos
               <div class="submenu">
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/insumos.html?categoria=Insumos Descartables' : '../pages/insumos.html?categoria=Insumos Descartables'}" class="submenu-item"">
                   <i class="fas fa-hand-sparkles"></i> Insumos Descartables
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/insumos.html?categoria=Líquidos y Soluciones' : '../pages/insumos.html?categoria=Líquidos y Soluciones'}" class="submenu-item"">
                   <i class="fas fa-tint"></i> Líquidos y Soluciones
                 </a>
               </div>
@@ -564,11 +564,14 @@ function cargarHeader(targetElementId = 'header-container', activeSection = '') 
             <li class="catalogo-item ${activeSection === 'especializados' ? 'active' : ''}">
               Productos Especializados
               <div class="submenu">
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/especializados.html?categoria=Laboratorio Clínico' : '../pages/especializados.html?categoria=Laboratorio Clínico'}" class="submenu-item">
                   <i class="fas fa-flask"></i> Laboratorio Clínico
                 </a>
-                <a href="#" class="submenu-item">
+                <a href="${baseUrl.endsWith('src') ? 'pages/especializados.html?categoria=Odontología' : '../pages/especializados.html?categoria=Odontología'}" class="submenu-item">
                   <i class="fas fa-tooth"></i> Odontología
+                </a>
+                <a href="${baseUrl.endsWith('src') ? 'pages/especializados.html?categoria=Cuidado del Hogar' : '../pages/especializados.html?categoria=Cuidado del Hogar'}" class="submenu-item">
+                  <i class="fas fa-home"></i> Cuidado del Hogar
                 </a>
               </div>
             </li>
